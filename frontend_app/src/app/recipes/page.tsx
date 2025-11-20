@@ -2,11 +2,6 @@ import { Breadcrumbs, SearchBar, RecipeGrid } from "@/components";
 import { listRecipes } from "@/lib/api/recipes";
 import { headers } from "next/headers";
 
-export const metadata = {
-  title: "Recipes · Recipe Explorer",
-  description: "Browse our curated collection of delicious recipes.",
-};
-
 /**
  * PUBLIC_INTERFACE
  * Recipes index page using mock/static-friendly listing.
@@ -56,7 +51,7 @@ export default async function RecipesIndex() {
       </header>
       {/* Inline search - read-only on server, navigation handled by NavBar on client */}
       <div>
-        <SearchBar value={trimmed} className="max-w-xl" onSubmit={() => { /* no-op on server */ }} />
+        <SearchBar value={trimmed} className="max-w-xl" />
       </div>
       <section aria-label="Recipe results">
         <RecipeGrid

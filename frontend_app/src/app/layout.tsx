@@ -3,15 +3,74 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { Suspense } from "react";
 
+const SITE_URL =
+  (typeof process !== "undefined" &&
+    (process.env.NEXT_PUBLIC_FRONTEND_URL ||
+      process.env.NEXT_PUBLIC_API_BASE ||
+      process.env.NEXT_PUBLIC_BACKEND_URL)) ||
+  "https://example.com";
+
 export const metadata: Metadata = {
-  title: "Recipe Explorer",
-  description: "Browse, search, and discover delicious recipes with a modern, accessible interface.",
+  title: {
+    default: "Recipe Explorer",
+    template: "%s · Recipe Explorer",
+  },
+  description:
+    "Browse, search, and discover delicious recipes with a modern, accessible interface.",
   applicationName: "Recipe Explorer",
   authors: [{ name: "Recipe Explorer" }],
-  keywords: ["recipes", "cooking", "food", "search", "browse"],
+  keywords: [
+    "recipes",
+    "cooking",
+    "food",
+    "search",
+    "browse",
+    "ingredients",
+    "meal",
+    "dinner ideas",
+  ],
   creator: "Recipe Explorer",
   publisher: "Recipe Explorer",
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Recipe Explorer",
+    title: "Recipe Explorer",
+    description:
+      "Browse, search, and discover delicious recipes with a modern, accessible interface.",
+    url: SITE_URL,
+    images: [
+      {
+        url: "/assets/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Recipe Explorer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Recipe Explorer",
+    description:
+      "Browse, search, and discover delicious recipes with a modern, accessible interface.",
+    images: ["/assets/og-default.png"],
+    creator: "@recipe_explorer",
+  },
+  category: "food & drink",
 };
 
 export default function RootLayout({
@@ -25,10 +84,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className="h-full scroll-smooth"
     >
-      <body
-        suppressHydrationWarning
-        className="min-h-full antialiased"
-      >
+      <body suppressHydrationWarning className="min-h-full antialiased">
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
