@@ -1,5 +1,6 @@
 import { Breadcrumbs, SearchBar, RecipeGrid } from "@/components";
 import { listRecipes } from "@/lib/api/recipes";
+import { headers } from "next/headers";
 
 export const metadata = {
   title: "Recipes · Recipe Explorer",
@@ -9,15 +10,40 @@ export const metadata = {
 /**
  * PUBLIC_INTERFACE
  * Recipes index page using mock/static-friendly listing.
+ * Static-export friendly: does not await or depend on dynamic searchParams.
  */
-export default async function RecipesIndex({
-  searchParams,
-}: {
-  searchParams?: { q?: string };
-}) {
-  const sp = searchParams || {};
-  const q = sp.q?.toString().trim() || "";
-  const data = await listRecipes({ q, pageSize: 24, sortBy: "createdAt", sortDir: "desc" });
+export default async function RecipesIndex() {
+  // Static export friendly query parsing from headers as a best-effort fallback.
+  let trimmed = "";
+  try {
+    const h = await headers();
+    const qHeader = h.get("x-invoke-query") || "";
+    if (qHeader) {
+      const usp = new URLSearchParams(qHeader);
+      const hv = usp.get("q") || "";
+      trimmed = hv.trim();
+    } else {
+      const referer = h.get("referer");
+      if (referer) {
+        try {
+          const url = new URL(referer);
+          const hv = url.searchParams.get("q") || "";
+          trimmed = hv.trim();
+        } catch {
+          // ignore parse failures
+        }
+      }
+    }
+  } catch {
+    // headers() may not be available in some SSG contexts; keep empty query
+  }
+
+  const data = await listRecipes({
+    q: trimmed,
+    pageSize: 24,
+    sortBy: "createdAt",
+    sortDir: "desc",
+  });
 
   return (
     <div className="space-y-6">
@@ -28,10 +54,9 @@ export default async function RecipesIndex({
           Explore our latest and greatest. Use search to refine.
         </p>
       </header>
-      {/* Inline search - non-interactive on server, navigates by client via NavBar as well */}
+      {/* Inline search - read-only on server, navigation handled by NavBar on client */}
       <div>
-        {/* Client SearchBar is optional here; keep read-only prompt for SSG */}
-        <SearchBar value={q} className="max-w-xl" onSubmit={() => { /* no-op on server */ }} />
+        <SearchBar value={trimmed} className="max-w-xl" onSubmit={() => { /* no-op on server */ }} />
       </div>
       <section aria-label="Recipe results">
         <RecipeGrid
