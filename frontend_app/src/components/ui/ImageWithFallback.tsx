@@ -6,11 +6,11 @@ import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { theme } from './theme';
 
 type Props = Omit<ImageProps, 'onError'> & {
-  fallbackSrc?: string;
-  onImageErrorSrc?: string;
+  fallbackSrc?: string | StaticImport;
+  onImageErrorSrc?: string | StaticImport;
 };
 
-const DEFAULT_FALLBACK =
+const DEFAULT_FALLBACK: string =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
@@ -30,28 +30,32 @@ export function ImageWithFallback({
   ...rest
 }: Props) {
   /** Accessible Image component with built-in error fallback and blur placeholder. */
-  const [imgSrc, setImgSrc] = React.useState<string | StaticImport | URL | undefined>(
-    typeof src === 'string' || src instanceof URL ? src : undefined
-  );
+  const initialSrc: string | StaticImport =
+    typeof src === 'string' ? src : (src as StaticImport);
+
+  const [imgSrc, setImgSrc] = React.useState<string | StaticImport>(initialSrc);
   const [errored, setErrored] = React.useState(false);
 
   React.useEffect(() => {
-    setImgSrc(src);
+    setImgSrc(typeof src === 'string' ? src : (src as StaticImport));
     setErrored(false);
   }, [src]);
+
+  const effectiveSrc: string | StaticImport =
+    errored ? (onImageErrorSrc || fallbackSrc || (DEFAULT_FALLBACK as string)) : imgSrc;
 
   return (
     <Image
       {...rest}
-      src={errored ? onImageErrorSrc || fallbackSrc || DEFAULT_FALLBACK : imgSrc}
+      src={effectiveSrc}
       alt={alt || 'Image'}
       onError={() => {
         setErrored(true);
       }}
       placeholder="blur"
       blurDataURL={
-        typeof src === 'string' && src.toString().startsWith('data:image')
-          ? (src as string)
+        typeof effectiveSrc === 'string' && effectiveSrc.toString().startsWith('data:image')
+          ? (effectiveSrc as string)
           : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnpzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGZpbHRlciBpZD0iYiI+RmU8L2ZpbHRlcj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI2U1ZTdlYiIvPjwvc3ZnPg=='
       }
       style={{
