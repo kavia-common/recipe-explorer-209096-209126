@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ocean Professional logo: simple wave mark with blue and amber accent -->
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Recipe Explorer Logo</title>
+  <desc id="desc">Ocean-themed wave mark with an amber sun accent</desc>
+  <rect width="192" height="192" rx="24" fill="#ffffff"/>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B82F6" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#111827" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="24" y1="64" x2="168" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="176" height="176" rx="20" fill="url(#g1)"/>
+  <!-- Amber sun -->
+  <circle cx="140" cy="60" r="14" fill="#F59E0B"/>
+  <!-- Wave -->
+  <path d="M28 120c18-18 38-18 56 0 18 18 38 18 56 0 8-8 16-12 24-12v20c-8 0-16 4-24 12-18 18-38 18-56 0-18-18-38-18-56 0V120Z" fill="url(#wave)"/>
+</svg>

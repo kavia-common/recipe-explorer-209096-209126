@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { Suspense } from "react";
+import React from "react";
 
 const SITE_URL =
   (typeof process !== "undefined" &&
@@ -10,6 +11,7 @@ const SITE_URL =
       process.env.NEXT_PUBLIC_BACKEND_URL)) ||
   "https://example.com";
 
+// PUBLIC_INTERFACE
 export const metadata: Metadata = {
   title: {
     default: "Recipe Explorer",
@@ -71,8 +73,19 @@ export const metadata: Metadata = {
     creator: "@recipe_explorer",
   },
   category: "food & drink",
+  // Add manifest and icons for PWA/favicon support
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", rel: "icon", type: "image/x-icon", sizes: "any" },
+    ],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+  },
+  themeColor: "#2563EB",
 };
 
+// PUBLIC_INTERFACE
 export default function RootLayout({
   children,
 }: {
@@ -84,6 +97,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className="h-full scroll-smooth"
     >
+      <head>
+        {/* Explicit manifest and favicon links for broad/static export compatibility */}
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta name="theme-color" content="#2563EB" />
+      </head>
       <body suppressHydrationWarning className="min-h-full antialiased">
         <a href="#main-content" className="skip-to-content">
           Skip to content
