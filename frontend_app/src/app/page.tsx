@@ -1,9 +1,9 @@
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center">
-      <h1 className="text-black text-4xl font-light">
-        frontend_app is being generated
+    <section className="min-h-[60vh] flex items-center justify-center">
+      <h1 className="text-4xl font-light" style={{ color: "var(--color-text)" }}>
+        Welcome to Recipe Explorer
       </h1>
-    </main>
+    </section>
   );
 }
